@@ -112,24 +112,22 @@ dataset = selected_mixture.get_dataset(
 )
 
 # To read out the data you can do something like this:
-save_data = []
 source_counter = defaultdict(lambda: 0)
 NUM_SAMPLES = 100
 # If you would like to take min(1 epoch, NUM_SAMPLES) then use dataset.take(NUM_SAMPLES)
 # Or if you would like to gather a full epoch, simply `enumerate(dataset)` until completion.
 ds = dataset.take(NUM_SAMPLES) if args.sample else dataset
-for i, ex in enumerate(ds):
-    source_counter[ex["_task_source"].numpy()] += 1
-    save_data.append(({"input" : ex["inputs_pretokenized"].numpy().decode(),
-                      "target" : ex["targets_pretokenized"].numpy().decode(),
-                      "_template_type" : ex["_template_type"].numpy().decode(),
-                      "_task_name" : ex["_task_name"].numpy().decode()}))
-
-print(f"Data Submixture Counts: {source_counter}")
-
-print(save_data[0])
 
 with open(f"{args.mixture}.jsonl", "w") as f:
-    for line in save_data:
-        json.dump(line, f)
+    for ex in ds:
+        source_counter[ex["_task_source"].numpy()] += 1
+        line = {"input" : ex["inputs_pretokenized"].numpy().decode(),
+                      "target" : ex["targets_pretokenized"].numpy().decode(),
+                      "task_source": ex["_task_source"].numpy().decode(),
+                      "template_type" : ex["_template_type"].numpy().decode(),
+                      "task_name" : ex["_task_name"].numpy().decode()}
+        f.write(json.dumps(line))
         f.write("\n")
+
+print(f"Data Submixture Counts: {source_counter}")
+print(line)
