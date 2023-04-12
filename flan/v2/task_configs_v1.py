@@ -599,14 +599,14 @@ def _process_newsroom(example):
   }
 
 
-TASK_CONFIGS['newsroom'] = TaskConfig(
-    source=seqio.TfdsDataSource(tfds_name='newsroom:1.0.0', splits=SPLITS_DICT),
-    preprocessors=[
-        _process_newsroom,
-    ],
-    postprocess_fn=None,
-    metric_fns=[t5_metrics.rouge],
-)
+# TASK_CONFIGS['newsroom'] = TaskConfig(
+#     source=seqio.TfdsDataSource(tfds_name='newsroom:1.0.0', splits=SPLITS_DICT),
+#     preprocessors=[
+#         _process_newsroom,
+#     ],
+#     postprocess_fn=None,
+#     metric_fns=[t5_metrics.rouge],
+# )
 
 
 # =================== Opinion Abstracts Rotten Tomatoes ========================
